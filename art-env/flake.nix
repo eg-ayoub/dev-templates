@@ -24,7 +24,11 @@
 
     devShell.${system} = pkgs.mkShell {
     
-      packages = with pkgs; [ python3 ] ++ [ helm ] ;
+      packages = with pkgs; [
+        ( python3.withPackages ( ps: with ps;[ tox ] ) ) 
+      ] ++ [ 
+        helm 
+      ];
 
     };
 
