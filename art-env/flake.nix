@@ -25,7 +25,8 @@
     devShell.${system} = pkgs.mkShell {
     
       packages = with pkgs; [
-        ( python3.withPackages ( ps: with ps;[ tox ] ) ) 
+        pre-commit
+        ( python3.withPackages ( ps: with ps;[ tox pre-commit-hooks ] ) ) 
       ] ++ [ 
         helm 
       ];
