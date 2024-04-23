@@ -3,10 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    nixpkgs-python.url = "github:cachix/nixpkgs-python";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-python, ... }:
+  outputs = { self, nixpkgs, ... }:
   let
 
     system = "x86_64-linux"; 
@@ -25,16 +24,7 @@
 
     devShell.${system} = pkgs.mkShell {
     
-      packages = [ 
-        nixpkgs-python.packages.${system}."2.7"
-        nixpkgs-python.packages.${system}."3.6"
-        (nixpkgs-python.packages.${system}."3.10".withPackages (ps: with ps; [ tox ]))
-        helm
-      ];
-
-      shellHook = ''
-        export _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_m_linux_${system}-gnu
-      '';
+      packages = with pkgs; [ python3 ] ++ [ helm ] ;
 
     };
 
