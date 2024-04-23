@@ -32,6 +32,10 @@
         helm
       ];
 
+      shellHook = ''
+        export _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_m_linux_${system}-gnu
+      '';
+
     };
 
   };
