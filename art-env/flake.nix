@@ -33,7 +33,11 @@
       packages = [
         py36_pkgs.python36
         # pkgs.python
-        pkgs.python310
+        (pkgs.python312.withPackages (python-pkgs: [
+          python-pkgs.tox
+          python-pkgs.pre-commit-hooks
+          python-pkgs.virtualenv
+        ]))
         pkgs.pre-commit
       ];
 
