@@ -41,6 +41,10 @@
         pkgs.pre-commit
       ];
 
+      shellHook = ''
+        export _PYTHON_SYSCONFIGDATA_NAME="_sysconfigdata__linux_x86_64-linux-gnu"
+      '';
+
     };
 
   };
