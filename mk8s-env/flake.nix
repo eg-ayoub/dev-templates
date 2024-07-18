@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Development environment for mk8s/dev/128";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -16,8 +16,13 @@
     }) { inherit system; };
     
     go_pkgs = import (builtins.fetchTarball {
-      url = "https://github.com/NixOS/nixpkgs/archive/7a339d87931bba829f68e94621536cad9132971a.tar.gz";
-      sha256 = "1w4zyrdq7zjrq2g3m7bhnf80ma988g87m7912n956md8fn3ybhr4";
+      url = "https://github.com/NixOS/nixpkgs/archive/336eda0d07dc5e2be1f923990ad9fdb6bc8e28e3.tar.gz";
+      sha256 = "0v8vnmgw7cifsp5irib1wkc0bpxzqcarlv8mdybk6dck5m7p10lr";
+    }) { inherit system; };
+
+    golangci_pkgs = import (builtins.fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/9957cd48326fe8dbd52fdc50dd2502307f188b0d.tar.gz";
+      sha256 = "1l2hq1n1jl2l64fdcpq3jrfphaz10sd1cpsax3xdya0xgsncgcsi";
     }) { inherit system; };
 
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true;config.permittedInsecurePackages = ["python-2.7.18.8"];};
@@ -26,28 +31,56 @@
 
     devShell.${system} = pkgs.mkShell {
     
-      packages = [
+      packages = with pkgs; [
+        acl
+        curl
+        enchant
+        gawk
+        libgcc
+        git
+        libassuan
+        btrfs-progs
+        lvm2
+        gdbm
+        gpgme
+        ncurses5
+        libxml2
+        xmlsec
+        libffi
+        xz
+        openssl
+        bzip2
+        readline
+        sqlite
+        gnumake
+        # nodejs
+        pkg-config
+        plantuml
+        # shellcheck
+        tk
+        zlib
+        python
+        crane
+        gcrane
+        skopeo
+        kubernetes-helm
+        vagrant
+        jq
+        isomd5sum
+        cdrkit
+      ] ++ [
         (py36_pkgs.python36.withPackages (python36-pkgs: [
           python36-pkgs.virtualenv
           python36-pkgs.pip
         ]))
-        (pkgs.python312Full.withPackages (python312-pkgs: [
+        (python312Full.withPackages (python312-pkgs: [
           python312-pkgs.tox
           python312-pkgs.virtualenv
           python312-pkgs.pip
         ]))
-        pkgs.python
-        pkgs.crane
-        pkgs.gcrane
-        pkgs.skopeo
-        pkgs.kubernetes-helm
-        pkgs.vagrant
-        pkgs.jq
-        pkgs.isomd5sum
-        pkgs.cdrkit
-        go_pkgs.go_1_19
-      ];
-
+        go_pkgs.go_1_20
+        golangci_pkgs.golangci-lint
+      ]; 
     };
 
   };
