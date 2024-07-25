@@ -26,6 +26,8 @@
     }) { inherit system; };
 
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true;config.permittedInsecurePackages = ["python-2.7.18.8"];};
+
+    opm = pkgs.callPackage ./opm.nix {};
   in
   {
 
@@ -80,6 +82,8 @@
         ]))
         go_pkgs.go_1_20
         golangci_pkgs.golangci-lint
+        # opm downloaded from github
+        opm
       ]; 
     };
 
