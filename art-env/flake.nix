@@ -10,35 +10,54 @@
 
     system = "x86_64-linux"; 
 
-    # no need to get old helm anymore
-    # helm_pkgs = import (builtins.fetchTarball {
-    #   # HELM 3.12.1
-    #   # https://lazamar.co.uk/nix-versions/?channel=nixpkgs-unstable&package=kubernetes-helm
-    #   url = "https://github.com/NixOS/nixpkgs/archive/5a8650469a9f8a1958ff9373bd27fb8e54c4365d.tar.gz";
-    #   sha256 = "0qij2z6fxlmy4y0zaa3hbza1r2pnyp48pwvfvba614mb8x233ywq";
-    #  }) { inherit system; };
-    # helm = helm_pkgs.kubernetes-helm;
-
     py36_pkgs = import (builtins.fetchTarball {
       url = "https://github.com/NixOS/nixpkgs/archive/407f8825b321617a38b86a4d9be11fd76d513da2.tar.gz";
       sha256 = "1lpdc7lhrb5dynkmwsn77cw2bxj7ar7ph2lxmy7bnp52rxdz5yz2";
     }) { inherit system; };
 
-    pkgs = import nixpkgs { inherit system; };
+    pkgs = import nixpkgs { inherit system;config.allowUnfree = true;config.permittedInsecurePackages = ["python-2.7.18.8"]; };
   in
   {
 
     devShell.${system} = pkgs.mkShell {
     
-      packages = [
-        py36_pkgs.python36
-        # pkgs.python
-        (pkgs.python312.withPackages (python-pkgs: [
-          python-pkgs.tox
-          python-pkgs.pre-commit-hooks
-          python-pkgs.virtualenv
+      packages = with pkgs; [
+        python
+        pre-commit
+        libxcrypt
+        acl
+        curl
+        gawk
+        libgcc
+        git
+        cdrkit
+        isomd5sum
+        openssl
+        bzip2
+        readline
+        sqlite
+        ncurses5
+        libxml2
+        xmlsec
+        libffi
+        lzma
+        gnumake
+        plantuml
+        skopeo
+        tk
+        xz
+        zlib
+      ] ++ [
+        (py36_pkgs.python36.withPackages (python36-pkgs: [
+          python36-pkgs.virtualenv
+          python36-pkgs.pip
         ]))
-        pkgs.pre-commit
+        (pkgs.python312.withPackages (python312-pkgs: [
+          python312-pkgs.tox
+          python312-pkgs.pre-commit-hooks
+          python312-pkgs.pip
+          python312-pkgs.virtualenv
+        ]))
       ];
 
       shellHook = ''
